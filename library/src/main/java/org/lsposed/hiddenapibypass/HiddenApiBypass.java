@@ -145,7 +145,6 @@ public final class HiddenApiBypass {
         }
     }
 
-    @VisibleForTesting
     static boolean checkArgsForInvokeMethod(Class<?>[] params, Object[] args) {
         if (params.length != args.length) return false;
         for (int i = 0; i < params.length; ++i) {
