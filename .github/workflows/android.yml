@@ -111,7 +111,9 @@ jobs:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
           target: ${{ matrix.target }}
-          script: ./gradlew connectedCheck
+          script: |
+              ./gradlew connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=org.lsposed.hiddenapibypass.HiddenApiBypassTest
+              ./gradlew connectedCheck -Pandroid.testInstrumentationRunnerArguments.class=org.lsposed.hiddenapibypass.LSPassTest
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
