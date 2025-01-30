@@ -145,6 +145,7 @@ public final class HiddenApiBypass {
         }
     }
 
+    @VisibleForTesting
     static boolean checkArgsForInvokeMethod(Class<?>[] params, Object[] args) {
         if (params.length != args.length) return false;
         for (int i = 0; i < params.length; ++i) {
@@ -394,7 +395,7 @@ public final class HiddenApiBypass {
             Object runtime = invoke(VMRuntime.class, null, "getRuntime");
             invoke(VMRuntime.class, runtime, "setHiddenApiExemptions", (Object) signaturePrefixes);
             return true;
-        } catch (Throwable e) {
+        } catch (ReflectiveOperationException e) {
             Log.w(TAG, "setHiddenApiExemptions", e);
             return false;
         }

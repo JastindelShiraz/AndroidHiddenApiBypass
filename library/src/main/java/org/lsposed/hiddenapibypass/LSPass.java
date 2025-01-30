@@ -1,7 +1,5 @@
 package org.lsposed.hiddenapibypass;
 
-import static org.lsposed.hiddenapibypass.HiddenApiBypass.checkArgsForInvokeMethod;
-
 import android.os.Build;
 import android.util.Log;
 import android.util.Property;
@@ -32,6 +30,23 @@ public final class LSPass {
         methods = Property.of(Class.class, Method[].class, "DeclaredMethods");
         constructors = Property.of(Class.class, Constructor[].class, "DeclaredConstructors");
         fields = Property.of(Class.class, Field[].class, "DeclaredFields");
+    }
+
+    private static boolean checkArgsForInvokeMethod(Class<?>[] params, Object[] args) {
+        if (params.length != args.length) return false;
+        for (int i = 0; i < params.length; ++i) {
+            if (params[i].isPrimitive()) {
+                if (params[i] == int.class && !(args[i] instanceof Integer)) return false;
+                else if (params[i] == byte.class && !(args[i] instanceof Byte)) return false;
+                else if (params[i] == char.class && !(args[i] instanceof Character)) return false;
+                else if (params[i] == boolean.class && !(args[i] instanceof Boolean)) return false;
+                else if (params[i] == double.class && !(args[i] instanceof Double)) return false;
+                else if (params[i] == float.class && !(args[i] instanceof Float)) return false;
+                else if (params[i] == long.class && !(args[i] instanceof Long)) return false;
+                else if (params[i] == short.class && !(args[i] instanceof Short)) return false;
+            } else if (args[i] != null && !params[i].isInstance(args[i])) return false;
+        }
+        return true;
     }
 
     /**
@@ -168,7 +183,7 @@ public final class LSPass {
             Object runtime = invoke(VMRuntime.class, null, "getRuntime");
             invoke(VMRuntime.class, runtime, "setHiddenApiExemptions", (Object) signaturePrefixes);
             return true;
-        } catch (Throwable e) {
+        } catch (ReflectiveOperationException e) {
             Log.w(TAG, "setHiddenApiExemptions", e);
             return false;
         }
