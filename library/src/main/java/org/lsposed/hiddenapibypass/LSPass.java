@@ -127,6 +127,7 @@ public final class LSPass {
         for (Constructor<?> constructor : constructors) {
             Class<?>[] params = constructor.getParameterTypes();
             if (!checkArgsForInvokeMethod(params, initargs)) continue;
+            constructor.setAccessible(true);
             return constructor.newInstance(initargs);
         }
         throw new NoSuchMethodException("Cannot find matching constructor");
@@ -148,6 +149,7 @@ public final class LSPass {
             if (!method.getName().equals(methodName)) continue;
             Class<?>[] params = method.getParameterTypes();
             if (!checkArgsForInvokeMethod(params, args)) continue;
+            method.setAccessible(true);
             return method.invoke(thiz, args);
         }
         throw new NoSuchMethodException("Cannot find matching method");
